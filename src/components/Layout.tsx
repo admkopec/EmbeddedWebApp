@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react'
-import Link from 'next/link'
 import Head from 'next/head'
-import {Box} from "@chakra-ui/react";
+import {Box, HStack, StackDivider, StackItem} from "@chakra-ui/react";
+import {Link} from "@chakra-ui/next-js";
 
 type Props = {
     children?: ReactNode
@@ -17,8 +17,19 @@ const Layout = ({ children, title = 'This is the default title' }: Props) => (
         </Head>
         <header>
             <nav>
-                <Link href="/">Home</Link>
-                <Link href="/about">About</Link>
+              <HStack
+                divider={<StackDivider borderColor='gray.200' />}
+                spacing={4}
+                align='center'
+                p={4}
+              >
+                <StackItem>
+                  <Link href="/">Home</Link>
+                </StackItem>
+                <StackItem>
+                  <Link href="/about">About</Link>
+                </StackItem>
+              </HStack>
             </nav>
         </header>
         {children}
