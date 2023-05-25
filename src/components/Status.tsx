@@ -3,16 +3,16 @@ import {Container, FormControl, FormLabel, Grid, GridItem, Stack, Switch, Text} 
 const Status = () => (
   <Grid gap={4} templateAreas={`"act image"`}>
     <GridItem area={'act'}>
-      <Container borderWidth='1px' borderRadius='lg'>
+      <Container borderWidth='1px' borderRadius='lg' p={2}>
         <Text>Actuators status</Text>
         <Stack align={"center"} direction={"row"} alignItems={"center"}>
-          <FormControl display='flex' alignItems='center'>
+          <FormControl display='flex' justifyContent={"center"}>
             <FormLabel htmlFor='light' mb='0'>
               Light
             </FormLabel>
             <Switch id='light' />
           </FormControl>
-          <FormControl display='flex' alignItems='center'>
+          <FormControl display='flex' justifyContent={"center"}>
             <FormLabel htmlFor='bar' mb='0'>
               Bar
             </FormLabel>

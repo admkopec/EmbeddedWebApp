@@ -8,7 +8,7 @@ type Props = {
     title?: string
 }
 
-const Layout = ({ children, title = 'This is the default title' }: Props) => (
+const Layout = ({ children, title = 'Smart Parking System' }: Props) => (
     <Box my={0} mx={"auto"} alignItems={"center"} display={"flex"} flexFlow={"column nowrap"}>
         <Head>
             <title>{title}</title>

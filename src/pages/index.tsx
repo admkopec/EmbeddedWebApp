@@ -2,6 +2,7 @@ import RootLayout from "@/components/Layout";
 import {Tab, TabList, TabPanel, TabPanels, Tabs} from "@chakra-ui/tabs";
 import {Card, CardBody, ChakraProvider} from "@chakra-ui/react";
 import Status from "@/components/Status";
+import Database from "@/components/Database";
 
 const IndexPage = () => (
     <ChakraProvider>
@@ -19,7 +20,7 @@ const IndexPage = () => (
                   <Status />
                 </TabPanel>
                 <TabPanel>
-                  <p>two!</p>
+                  <Database />
                 </TabPanel>
                 <TabPanel>
                   <p>three!</p>
