@@ -1,6 +1,7 @@
 import React, { ReactNode } from 'react'
 import Link from 'next/link'
 import Head from 'next/head'
+import {Box} from "@chakra-ui/react";
 
 type Props = {
     children?: ReactNode
@@ -8,7 +9,7 @@ type Props = {
 }
 
 const Layout = ({ children, title = 'This is the default title' }: Props) => (
-    <div>
+    <Box my={0} mx={"auto"} alignItems={"center"} display={"flex"} flexFlow={"column nowrap"}>
         <Head>
             <title>{title}</title>
             <meta charSet="utf-8" />
@@ -22,10 +23,9 @@ const Layout = ({ children, title = 'This is the default title' }: Props) => (
         </header>
         {children}
         <footer>
-            <hr />
-            <span>I&apos;m here to stay (Footer)</span>
+            {/*TODO: make some informational footer containing the authors*/}
         </footer>
-    </div>
+    </Box>
 )
 
 export default Layout
