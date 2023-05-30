@@ -4,6 +4,7 @@ import {Card, CardBody, ChakraProvider} from "@chakra-ui/react";
 import Status from "@/components/Status";
 import Logs from "@/components/Logs";
 import Database from "@/components/Database";
+import 'overlayscrollbars/overlayscrollbars.css';
 
 const IndexPage = () => (
     <ChakraProvider>

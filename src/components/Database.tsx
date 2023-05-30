@@ -2,7 +2,7 @@ import {Button, Container, Flex, Grid, GridItem, Input, List, ListItem, Text} fr
 import {BeatLoader} from "react-spinners";
 import React from "react";
 import Plate from "@/components/Plate";
-import { ScrollableComponentElement } from 'scrollable-component';
+import {OverlayScrollbarsComponent} from "overlayscrollbars-react";
 
 export default function Database(){
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
@@ -25,16 +25,20 @@ export default function Database(){
                                   "plates null"`}>
       <GridItem area={"plates"}>
         <Container borderWidth='1px' borderRadius='lg' p={2}>
-          <Text>Authorized license plates</Text>
-          <Container overflow={"auto"}>
-            <List>
-              {platesData.map((plate: string, index: number) => (
-                <ListItem key={index+1}>
-                  <Plate plateNumber={plate}/>
-                </ListItem>
-              ))}
-            </List>
-          </Container>
+          <Text m={1}>Authorized license plates</Text>
+          <OverlayScrollbarsComponent element={"div"}
+                                      options={{ scrollbars: { autoHide: 'scroll' } }}
+                                      defer>
+            <Container overflow={"auto"} maxH={"sm"}>
+              <List>
+                {platesData.map((plate: string, index: number) => (
+                  <ListItem key={index+1}>
+                    <Plate licensePlate={plate}/>
+                  </ListItem>
+                ))}
+              </List>
+            </Container>
+          </OverlayScrollbarsComponent>
         </Container>
       </GridItem>
       <GridItem area={"search_plate"}>
