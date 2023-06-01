@@ -2,30 +2,14 @@ import {Grid, GridItem, Accordion, AccordionPanel, Box, AccordionButton, Accordi
 import {useEffect, useState} from "react";
 import Image from "next/image";
 import {useInterval} from "@/utils/hooks";
-
-interface Log {
-    timestamp: string;
-    action: string;
-    description: string;
-    image: string | undefined;
-}
+import {Log, fetchLogs} from "@/services/logs.service";
 
 const Logs = () => {
     const [logs, setLogs] = useState<Log[]>([]);
     const [refresh, setRefresh] = useState(false);
 
     useEffect(() => {
-        fetch('/log', {
-            method: `GET`,
-            headers: {
-                Authorization: `Bearer ${sessionStorage.getItem('token')}`
-            }
-        }).then(response => {
-            if (!response.ok) {
-                throw new Error();
-            }
-            return response.json();
-        }).then((logs: Log[]) => {
+        fetchLogs().then((logs: Log[]) => {
             setLogs(logs);
         })
             .catch(error => {
