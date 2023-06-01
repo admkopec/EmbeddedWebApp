@@ -4,14 +4,14 @@ import Image from "next/image";
 import {useInterval} from "@/utils/hooks";
 
 interface Log {
-    timestamp: string,
-    action: string,
-    description: string,
-    image: string | undefined
+    timestamp: string;
+    action: string;
+    description: string;
+    image: string | undefined;
 }
 
 const Logs = () => {
-    const [logs, setLogs] = useState([]);
+    const [logs, setLogs] = useState<Log[]>([]);
     const [refresh, setRefresh] = useState(false);
 
     useEffect(() => {
@@ -39,8 +39,8 @@ const Logs = () => {
 
     return (
   <Accordion allowToggle>
-      {logs.map( (log) =>
-          <AccordionItem key={log}>
+      {logs.map( (log, index) =>
+          <AccordionItem key={index+1}>
               <h2>
                   <AccordionButton>
                       <Grid width='100%' templateColumns='repeat(2, 1fr)'>

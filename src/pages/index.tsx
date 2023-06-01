@@ -3,6 +3,8 @@ import {Tab, TabList, TabPanel, TabPanels, Tabs} from "@chakra-ui/tabs";
 import {Card, CardBody, ChakraProvider} from "@chakra-ui/react";
 import Status from "@/components/Status";
 import Logs from "@/components/Logs";
+import Database from "@/components/Database";
+import 'overlayscrollbars/overlayscrollbars.css';
 
 const IndexPage = () => (
     <ChakraProvider>
@@ -20,7 +22,7 @@ const IndexPage = () => (
                   <Status />
                 </TabPanel>
                 <TabPanel>
-                  <p>two!</p>
+                  <Database />
                 </TabPanel>
                 <TabPanel>
                   <Logs/>
