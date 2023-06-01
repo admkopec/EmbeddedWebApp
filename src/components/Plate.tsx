@@ -3,15 +3,15 @@ import {Flex, Input} from "@chakra-ui/react";
 import {ButtonGroup, IconButton} from "@chakra-ui/button";
 import {CheckIcon, CloseIcon, EditIcon} from "@chakra-ui/icons";
 import {Editable, useEditableControls, EditablePreview, EditableInput} from "@chakra-ui/editable";
-
-interface Plate{
-  licensePlate?: string;
-  expiryDate?: string;
-}
+import {Plate} from "@/services/plates.service";
 
 // TODO: add expiry date
 
-export default function Plate(props: Plate) {
+interface PlateProps {
+  plate: Plate
+}
+
+export default function Plate(props: PlateProps) {
   function EditableControls() {
     const {
       isEditing,
@@ -34,7 +34,7 @@ export default function Plate(props: Plate) {
 
     <Editable
       textAlign='center'
-      defaultValue={props.licensePlate ?? "Number"}
+      defaultValue={props.plate.plate ?? "Number"}
       fontSize='xl'
       isPreviewFocusable={false}
       p={1}

@@ -1,8 +1,8 @@
 export interface Log {
-    timestamp: string;
+    timestamp: string; // id of the log
     action: string;
     description: string;
-    image: string | undefined;
+    image?: string;
 }
 
 export const fetchLogs = () =>
