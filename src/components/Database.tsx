@@ -3,11 +3,11 @@ import {BeatLoader} from "react-spinners";
 import React, {useEffect} from "react";
 import Plate from "@/components/Plate";
 import {OverlayScrollbarsComponent} from "overlayscrollbars-react";
-import {fetchPlates, Plate} from "@/services/plates.service";
+import {fetchPlates, Plate as PlateInfo} from "@/services/plates.service";
 
 export default function Database(){
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const [platesData, setPlatesData] = React.useState<Plate[]>([
+  const [platesData, setPlatesData] = React.useState<PlateInfo[]>([
     {plate: "LPU42534"},
     {plate: "LPU43534"},
     {plate: "LPU44534"},
@@ -21,7 +21,7 @@ export default function Database(){
   ]);
 
   useEffect(() => {
-    fetchPlates().then((plates: Plate[]) => {
+    fetchPlates().then((plates: PlateInfo[]) => {
       setPlatesData(plates);
     })
         .catch(error => {
