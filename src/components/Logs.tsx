@@ -1,4 +1,4 @@
-import {Accordion, AccordionPanel, Box, AccordionButton, AccordionItem, AccordionIcon} from "@chakra-ui/react";
+import {Grid, GridItem, Accordion, AccordionPanel, Box, AccordionButton, AccordionItem, AccordionIcon} from "@chakra-ui/react";
 import {useEffect, useState} from "react";
 import Image from "next/image";
 import {useInterval} from "@/utils/hooks";
@@ -43,17 +43,26 @@ const Logs = () => {
           <AccordionItem key={log}>
               <h2>
                   <AccordionButton>
-                      <Box as="span" flex='1' textAlign='left'>
-                          {log.action}
-                      </Box>
+                      <Grid width='100%' templateColumns='repeat(2, 1fr)'>
+                          <GridItem fontWeight="600" textAlign='left'>
+                              {log.action}
+                          </GridItem>
+                          <GridItem fontWeight="400" color="rgba(0,0,0,0.5)">
+                              {log.timestamp}
+                          </GridItem>
+                      </Grid>
                       <AccordionIcon />
                   </AccordionButton>
               </h2>
               <AccordionPanel pb={4}>
-                  {log.action}
-                  {log.description}
-                  {log.timestamp}
-                  {log.image ? <Image src={`/image/${log.image}`} alt={'Log Image'} /> : <></>}
+                  <Grid templateColumns='repeat(2, 1fr)' gap={4}>
+                      <GridItem>
+                          {log.description}
+                      </GridItem>
+                      <GridItem>
+                          {log.image ? <Image src={`/image/${log.image}`} alt={'Log Image'} /> : <></>}
+                      </GridItem>
+                  </Grid>
               </AccordionPanel>
           </AccordionItem>
       )}
