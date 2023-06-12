@@ -1,12 +1,11 @@
-export interface Actuators {
-    light: number,
-    bar: number
+interface ImageJson {
+    image: string
 }
 
-export const fetchActuators = () =>
-    fetch("/api/actors",{
+export const fetchCurrentImage = () =>
+    fetch('/api/image', {
         method: `GET`,
-            headers: {
+        headers: {
             Authorization: `Bearer ${sessionStorage.getItem('token')}`
         }
     }).then((response) => {
@@ -14,19 +13,17 @@ export const fetchActuators = () =>
             throw new Error();
         }
         return response.json();
-    });
+    }).then((image: ImageJson) => image.image);
 
-export const setActuators = (actuators: Actuators) =>
-    fetch("/api/actors",{
-        method: `POST`,
+export const fetchImage = (imageID: string) =>
+    fetch(`/api/image/${imageID}`, {
+        method: `GET`,
         headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${sessionStorage.getItem('token')}`
-        },
-        body: JSON.stringify(actuators)
+        }
     }).then((response) => {
         if (!response.ok) {
             throw new Error();
         }
-        return response;
-    });
+        return response.json();
+    }).then((image: ImageJson) => image.image);

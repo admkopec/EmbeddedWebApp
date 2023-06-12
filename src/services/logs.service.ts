@@ -6,7 +6,7 @@ export interface Log {
 }
 
 export const fetchLogs = () =>
-    fetch('/log', {
+    fetch('/api/logs', {
         method: `GET`,
         headers: {
             Authorization: `Bearer ${sessionStorage.getItem('token')}`

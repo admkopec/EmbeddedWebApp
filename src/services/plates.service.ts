@@ -4,7 +4,7 @@ export interface Plate {
 }
 
 export const fetchPlates = () =>
-    fetch('/plate', {
+    fetch('/api/plate', {
         method: `GET`,
         headers: {
             Authorization: `Bearer ${sessionStorage.getItem('token')}`
@@ -17,7 +17,7 @@ export const fetchPlates = () =>
     });
 
 export const addPlate = (plates: Plate[]) =>
-    fetch('/plate', {
+    fetch('/api/plate', {
         method: `POST`,
         headers: {
             "Content-Type": "application/json",
@@ -37,7 +37,7 @@ export const addPlate = (plates: Plate[]) =>
     });
 
 export const deletePlate = (plateID: string) =>
-    fetch(`/plate/${encodeURIComponent(plateID)}`, {
+    fetch(`/api/plate/${encodeURIComponent(plateID)}`, {
         method: `DELETE`,
         headers: {
             Authorization: `Bearer ${sessionStorage.getItem('token')}`
@@ -50,7 +50,7 @@ export const deletePlate = (plateID: string) =>
     });
 
 export const modifyPlate = (plateID: string, plate: Plate) =>
-    fetch(`/plate/${encodeURIComponent(plateID)}`, {
+    fetch(`/api/plate/${encodeURIComponent(plateID)}`, {
         method: `POST`,
         headers: {
             "Content-Type": "application/json",

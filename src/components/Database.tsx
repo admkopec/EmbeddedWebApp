@@ -41,9 +41,9 @@ export default function Database(){
                                       defer>
             <Container overflow={"auto"} maxH={"sm"}>
               <List>
-                {platesData.map((plate: string, index: number) => (
+                {platesData.map((plate: PlateInfo, index: number) => (
                   <ListItem key={index+1}>
-                    <Plate licensePlate={plate}/>
+                    <Plate plate={plate}/>
                   </ListItem>
                 ))}
               </List>

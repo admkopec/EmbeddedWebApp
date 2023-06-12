@@ -1,16 +1,38 @@
-import {Grid, GridItem, Accordion, AccordionPanel, Box, AccordionButton, AccordionItem, AccordionIcon} from "@chakra-ui/react";
+import {
+    Grid,
+    GridItem,
+    Accordion,
+    AccordionPanel,
+    Box,
+    AccordionButton,
+    AccordionItem,
+    AccordionIcon,
+    Spinner
+} from "@chakra-ui/react";
 import {useEffect, useState} from "react";
 import Image from "next/image";
 import {useInterval} from "@/utils/hooks";
 import {Log, fetchLogs} from "@/services/logs.service";
+import {fetchImage} from "@/services/images.service";
 
 const Logs = () => {
     const [logs, setLogs] = useState<Log[]>([]);
+    const [images, setImages] = useState<string[]>([]);
     const [refresh, setRefresh] = useState(false);
 
     useEffect(() => {
         fetchLogs().then((logs: Log[]) => {
             setLogs(logs);
+            let promises = [];
+            let imgs = Array<string>(logs.length);
+            for (let i = 0; i < logs.length; i++) {
+                if (logs[i].image) {
+                    promises.push(fetchImage(logs[i].image).then((img) => {
+                        imgs[i] = img;
+                    }));
+                }
+            }
+            Promise.all(promises).then(() => setImages(imgs));
         })
             .catch(error => {
                 console.log(error.message)
@@ -44,7 +66,16 @@ const Logs = () => {
                           {log.description}
                       </GridItem>
                       <GridItem>
-                          {log.image ? <Image src={`/image/${log.image}`} alt={'Log Image'} /> : <></>}
+                          {log.image ?
+                              <>
+                              {images[index] ?
+                                  <Image src={`data:image/jpeg;base64, ${images[index]}`} alt={'Log Image'}/>
+                                  :
+                                  <Spinner/>
+                              }
+                              </>
+                              :
+                              <></>}
                       </GridItem>
                   </Grid>
               </AccordionPanel>
