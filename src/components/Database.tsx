@@ -1,27 +1,47 @@
-import {Button, Container, Flex, Grid, GridItem, Input, List, ListItem, Text} from "@chakra-ui/react";
+import {
+  Accordion,
+  Button,
+  Container,
+  Flex,
+  Grid,
+  GridItem,
+  Input,
+  Text,
+  useDisclosure
+} from "@chakra-ui/react";
 import {BeatLoader} from "react-spinners";
-import React, {useEffect} from "react";
-import Plate from "@/components/Plate";
+import PlateInfo from "@/components/PlateInfo";
+import React, {useEffect, useState} from "react";
 import {OverlayScrollbarsComponent} from "overlayscrollbars-react";
-import {fetchPlates, Plate as PlateInfo} from "@/services/plates.service";
+import {fetchPlates, Plate} from "@/services/plates.service";
+import ModifyPlateDialog, {Action} from "@/components/ModifyPlateDialog";
+
+export interface PlateModification {
+  action?: Action;
+  plate?: Plate;
+}
 
 export default function Database(){
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const [platesData, setPlatesData] = React.useState<PlateInfo[]>([
-    {plate: "LPU42534"},
-    {plate: "LPU43534"},
-    {plate: "LPU44534"},
-    {plate: "LPU45534"},
-    {plate: "LPU49534"},
-    {plate: "LPU43434"},
-    {plate: "LPU43124"},
-    {plate: "LPU45354"},
-    {plate: "LPU41224"},
-    {plate: "LPU46044"}
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [platesData, setPlatesData] = useState<Plate[]>([
+    {plate: "LPU42534", expireDate: "03.04.2026"},
+    {plate: "LPU42534", expireDate: "03.04.2026"},
+    {plate: "LPU42534", expireDate: "03.04.2026"},
+    {plate: "LPU42534", expireDate: "03.04.2026"},
+    {plate: "LPU42534", expireDate: "03.04.2026"},
+    {plate: "LPU42534", expireDate: "03.04.2026"},
+    {plate: "LPU42534", expireDate: "03.04.2026"},
+    {plate: "LPU42534", expireDate: "03.04.2026"},
+    {plate: "LPU42534", expireDate: "03.04.2026"},
+    {plate: "LPU42534", expireDate: "03.04.2026"},
+    {plate: "LPU42534", expireDate: "03.04.2026"},
+    {plate: "KU791XR", expireDate: "03.04.2026"}
   ]);
+  const [ currPlateInfo, setCurrPlateInfo ] = useState<PlateModification>();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
-    fetchPlates().then((plates: PlateInfo[]) => {
+    fetchPlates().then((plates: Plate[]) => {
       setPlatesData(plates);
     })
         .catch(error => {
@@ -29,26 +49,37 @@ export default function Database(){
         })
   });
 
+  const handleOpenDialog = (action: Action, plate: Plate) => {
+    setCurrPlateInfo({
+      action: action,
+      plate: plate
+    });
+    onOpen();
+  }
+
   return (
     <Grid gap={4} templateAreas={`"plates search_plate"
                                   "plates add_plate"
                                   "plates null"`}>
-      <GridItem area={"plates"}>
-        <Container borderWidth='1px' borderRadius='lg' p={2}>
+      <GridItem area={"plates"} m={0} p={0}>
+        <Container borderWidth='1px' borderRadius='lg' p={2} width={'100%'}>
           <Text m={1}>Authorized license plates</Text>
-          <OverlayScrollbarsComponent element={"div"}
-                                      options={{ scrollbars: { autoHide: 'scroll' } }}
-                                      defer>
-            <Container overflow={"auto"} maxH={"sm"}>
-              <List>
-                {platesData.map((plate: PlateInfo, index: number) => (
-                  <ListItem key={index+1}>
-                    <Plate plate={plate}/>
-                  </ListItem>
+          <Container maxH={"sm"} style={{overflow: 'auto'}}>
+            <OverlayScrollbarsComponent
+              element={'div'}
+              options={{ scrollbars: { autoHide: 'leave',
+                pointers: ['mouse', 'touch', 'pen'] }, overflow: { x: 'hidden', y: 'scroll' } }}
+              defer
+              style={{maxHeight: '300px', width: 'auto'}}
+            >
+              <Accordion allowToggle={true} width={'100%'}>
+                {platesData.map((plate: Plate, index: number) => (
+                  <PlateInfo plate={plate} openDialog={handleOpenDialog} key={index+1}/>
                 ))}
-              </List>
-            </Container>
-          </OverlayScrollbarsComponent>
+              </Accordion>
+            </OverlayScrollbarsComponent>
+          </Container>
+          <ModifyPlateDialog action={currPlateInfo?.action} plate={currPlateInfo?.plate} isOpen={isOpen} onClose={onClose}/>
         </Container>
       </GridItem>
       <GridItem area={"search_plate"}>
@@ -63,7 +94,8 @@ export default function Database(){
         <Container borderWidth='1px' borderRadius='lg' p={2}>
           <Flex direction={"column"} wrap={"nowrap"} alignItems={"center"} justifyContent={"center"}>
             <Text m={1}>Add new license plate</Text>
-            <Input m={1} placeholder='Enter plate number' variant={"filled"}/>
+            <Input m={1} placeholder='Enter new plate number' type="text" variant={"filled"}/>
+            <Input m={1} placeholder="Set expiry date" type="datetime-local" variant={"filled"}/>
             <Button
               m={1}
               isLoading={isLoading}

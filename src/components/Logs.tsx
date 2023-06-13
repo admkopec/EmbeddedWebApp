@@ -3,7 +3,6 @@ import {
     GridItem,
     Accordion,
     AccordionPanel,
-    Box,
     AccordionButton,
     AccordionItem,
     AccordionIcon,
@@ -16,7 +15,8 @@ import {Log, fetchLogs} from "@/services/logs.service";
 import {fetchImage} from "@/services/images.service";
 
 const Logs = () => {
-    const [logs, setLogs] = useState<Log[]>([]);
+    const [logs, setLogs] = useState<Log[]>([
+      {timestamp: "Date", action: "Action", description: "Desc"}]);
     const [images, setImages] = useState<string[]>([]);
     const [refresh, setRefresh] = useState(false);
 
@@ -26,7 +26,7 @@ const Logs = () => {
             let promises = [];
             let imgs = Array<string>(logs.length);
             for (let i = 0; i < logs.length; i++) {
-                if (logs[i].image) {
+                if (logs[i].image != undefined) {
                     promises.push(fetchImage(logs[i].image).then((img) => {
                         imgs[i] = img;
                     }));

@@ -1,15 +1,20 @@
 import RootLayout from "@/components/Layout";
 import {Tab, TabList, TabPanel, TabPanels, Tabs} from "@chakra-ui/tabs";
-import {Card, CardBody, ChakraProvider} from "@chakra-ui/react";
+import {Card, CardBody, ChakraProvider, extendTheme} from "@chakra-ui/react";
 import Status from "@/components/Status";
 import Logs from "@/components/Logs";
 import Database from "@/components/Database";
 import 'overlayscrollbars/overlayscrollbars.css';
+import {accordionTheme} from "@/style/PlateAccordion";
+
+export const theme = extendTheme({
+  components: { Accordion: accordionTheme },
+})
 
 const IndexPage = () => (
-    <ChakraProvider>
+    <ChakraProvider theme={theme}>
       <RootLayout>
-        <Card size={"lg"} m={4} maxW={"xl"} width={"xl"}>
+        <Card size={"lg"} m={4} maxW={"2xl"} width={"2xl"}>
           <CardBody>
             <Tabs align={"center"} size={"lg"} variant='enclosed' isFitted>
               <TabList>
