@@ -7,7 +7,7 @@ import {
 } from "@chakra-ui/modal";
 import {Box, Button, Input, Text} from "@chakra-ui/react";
 import React, {useState} from "react";
-import {deletePlate, modifyPlate, Plate} from "@/services/plates.service";
+import {Plate} from "@/services/plates.service";
 import {PlateModification} from "@/components/Database";
 
 export enum Action {
@@ -28,10 +28,6 @@ const actions : DialogAction[] = [
     title: "Update details of license plate",
     description: "Insert new data for the chosen license plate into the fields below and confirm.",
     callback: (plateID, closeDialog, plate) => {
-      if (plate)
-        modifyPlate(plateID, plate).then(closeDialog).catch((e: Error) =>
-          console.error("Could not update this license plate. Reason: " + e.message)
-        );
     },
     buttonText: "Update"
   },
@@ -40,9 +36,6 @@ const actions : DialogAction[] = [
     description: "This license plate data will be permanently deleted from the database and become unauthorised Do you" +
       " want to proceed?.",
     callback: (plateID, closeDialog) => {
-      deletePlate(plateID).then(closeDialog).catch((e: Error) =>
-        console.error("Could not delete this license plate. Reason: " + e.message)
-      );
     },
     buttonText: "Delete"
   }

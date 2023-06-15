@@ -30,6 +30,5 @@
     "react-placeholder-image": "^0.1.8",
     "react-spinners": "^0.13.8",
     "typescript": "5.0.4"
-  },
-  "proxy": "http://localhost:5000"
+  }
 }

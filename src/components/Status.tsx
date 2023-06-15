@@ -1,16 +1,18 @@
-import {Box, Container, FormControl, FormLabel, Grid, GridItem, Spinner, Stack, Switch, Text} from "@chakra-ui/react";
+import {Container, FormControl, FormLabel, Grid, GridItem, Stack, Switch, Text} from "@chakra-ui/react";
 import {useEffect, useState} from "react";
-import {fetchCurrentImage} from "@/services/images.service";
 import { Image } from '@chakra-ui/react'
 import {CustomPlaceholder} from "react-placeholder-image";
+import {ImageJson} from "@/services/images.service";
 
 const Status = () => {
-  const [currentImage, setCurrentImage] = useState<string>();
+  const [currentImage, setCurrentImage] = useState<ImageJson>();
+
   useEffect(() => {
-    fetchCurrentImage().then((img) => setCurrentImage(img)).catch((e: Error) => {
-      console.error("Could not fetch image. Reason: " + e.message);
-    });
-  })
+    fetch('api/image', {method: 'GET'}).then((res) => {
+      return res.json();
+    }).then((data: ImageJson) => setCurrentImage(data));
+  }, []);
+
   // TODO: Add actors to switches
   return (
       <Grid gap={4} templateAreas={`"act" 
@@ -39,7 +41,7 @@ const Status = () => {
         </GridItem>
         <GridItem area={'image'}>
           <Container borderWidth='1px' borderRadius='lg' p={2}>
-            <Image src={`data:image/jpeg;base64,${currentImage}`} fit={'contain'} alt={'Image of a car\'s license plate'}
+            <Image src={currentImage?.imagedata} fit={'contain'} alt={'Image of a car\'s license plate'}
                    borderRadius={'inherit'} fallback={
               <CustomPlaceholder
               width={500}

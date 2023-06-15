@@ -13,7 +13,7 @@ import {BeatLoader} from "react-spinners";
 import PlateInfo from "@/components/PlateInfo";
 import React, {useEffect, useState} from "react";
 import {OverlayScrollbarsComponent} from "overlayscrollbars-react";
-import {fetchPlates, Plate} from "@/services/plates.service";
+import {Plate} from "@/services/plates.service";
 import ModifyPlateDialog, {Action} from "@/components/ModifyPlateDialog";
 
 export interface PlateModification {
@@ -23,31 +23,34 @@ export interface PlateModification {
 
 export default function Database(){
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [platesData, setPlatesData] = useState<Plate[]>([
-    {plate: "LPU42534", expireDate: "03.04.2026"},
-    {plate: "LPU42534", expireDate: "03.04.2026"},
-    {plate: "LPU42534", expireDate: "03.04.2026"},
-    {plate: "LPU42534", expireDate: "03.04.2026"},
-    {plate: "LPU42534", expireDate: "03.04.2026"},
-    {plate: "LPU42534", expireDate: "03.04.2026"},
-    {plate: "LPU42534", expireDate: "03.04.2026"},
-    {plate: "LPU42534", expireDate: "03.04.2026"},
-    {plate: "LPU42534", expireDate: "03.04.2026"},
-    {plate: "LPU42534", expireDate: "03.04.2026"},
-    {plate: "LPU42534", expireDate: "03.04.2026"},
-    {plate: "KU791XR", expireDate: "03.04.2026"}
-  ]);
+  const [platesData, setPlatesData] = useState<Plate[]>(
+    // [{plate: "LPU42534", expireDate: "03.04.2026"},
+    // {plate: "LPU42534", expireDate: "03.04.2026"},
+    // {plate: "LPU42534", expireDate: "03.04.2026"},
+    // {plate: "LPU42534", expireDate: "03.04.2026"},
+    // {plate: "LPU42534", expireDate: "03.04.2026"},
+    // {plate: "LPU42534", expireDate: "03.04.2026"},
+    // {plate: "LPU42534", expireDate: "03.04.2026"},
+    // {plate: "LPU42534", expireDate: "03.04.2026"},
+    // {plate: "LPU42534", expireDate: "03.04.2026"},
+    // {plate: "LPU42534", expireDate: "03.04.2026"},
+    // {plate: "LPU42534", expireDate: "03.04.2026"},
+    // {plate: "KU791XR", expireDate: "03.04.2026"}]
+  );
   const [ currPlateInfo, setCurrPlateInfo ] = useState<PlateModification>();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
-    fetchPlates().then((plates: Plate[]) => {
-      setPlatesData(plates);
-    })
-        .catch(error => {
-          console.log(error.message)
-        })
-  });
+    fetch('/api/plate', {method: 'GET'})
+      .then((res) => {
+        if (res.ok)
+          return res.json();
+        return new Error(res.status.toString());
+      })
+      .then((plates: Plate[]) => {
+          setPlatesData(plates);
+        });
+  }, []);
 
   const handleOpenDialog = (action: Action, plate: Plate) => {
     setCurrPlateInfo({
@@ -73,9 +76,9 @@ export default function Database(){
               style={{maxHeight: '300px', width: 'auto'}}
             >
               <Accordion allowToggle={true} width={'100%'}>
-                {platesData.map((plate: Plate, index: number) => (
+                {platesData ? platesData.map((plate: Plate, index: number) => (
                   <PlateInfo plate={plate} openDialog={handleOpenDialog} key={index+1}/>
-                ))}
+                )) : <BeatLoader size={10} color='grey' />}
               </Accordion>
             </OverlayScrollbarsComponent>
           </Container>

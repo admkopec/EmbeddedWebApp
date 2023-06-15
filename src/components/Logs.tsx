@@ -11,8 +11,7 @@ import {
 import {useEffect, useState} from "react";
 import Image from "next/image";
 import {useInterval} from "@/utils/hooks";
-import {Log, fetchLogs} from "@/services/logs.service";
-import {fetchImage} from "@/services/images.service";
+import {Log} from "@/services/logs.service";
 
 const Logs = () => {
     const [logs, setLogs] = useState<Log[]>([
@@ -21,13 +20,14 @@ const Logs = () => {
     const [refresh, setRefresh] = useState(false);
 
     useEffect(() => {
-        fetchLogs().then((logs: Log[]) => {
+        fetch('api/logs', {method: 'GET'}).then((response) => response.json()).then(
+          (logs: Log[]) => {
             setLogs(logs);
             let promises = [];
             let imgs = Array<string>(logs.length);
             for (let i = 0; i < logs.length; i++) {
                 if (logs[i].image != undefined) {
-                    promises.push(fetchImage(logs[i].image).then((img) => {
+                    promises.push(fetch(`api/image/${logs[i].image}`, {method: 'GET'}).then((res) => res.json()).then((img:string) => {
                         imgs[i] = img;
                     }));
                 }
@@ -37,11 +37,11 @@ const Logs = () => {
             .catch(error => {
                 console.log(error.message)
             })
-    });
+    }, []);
 
-    useInterval(() => {
-        setRefresh(!refresh);
-    }, 5000);
+    // useInterval(() => {
+    //     setRefresh(!refresh);
+    // }, 5000);
 
     return (
   <Accordion allowToggle>

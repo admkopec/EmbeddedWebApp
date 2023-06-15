@@ -1,65 +1,86 @@
+import {NextApiRequest, NextApiResponse} from "next";
+import {localUrl} from "@/utils/api-params";
+
 export interface Plate {
     plate: string;
     expireDate?: string;
 }
 
-export const fetchPlates = () =>
-    fetch('/api/plate', {
-        method: `GET`,
-        headers: {
-            Authorization: `Bearer ${sessionStorage.getItem('token')}`
-        }
-    }).then(response => {
-        if (!response.ok) {
-            throw new Error();
-        }
-        return response.json();
-    });
+export const PlateGetter = async (req: NextApiRequest, res: NextApiResponse) => {
+  const responseJson = await fetch(`${localUrl}/api/plate`, {
+    method: `GET`
+  }).then(response => {
+    if (!response.ok) {
+      throw new Error();
+    }
+    return response.json();
+  }).catch((e: Error) => {
+    console.error("Could not fetch plates. Reason: " + e.message);
+  });
+  if (responseJson)
+    return res.status(200).json(responseJson);
+  else
+    return res.status(500);
+}
 
-export const addPlate = (plates: Plate[]) =>
-    fetch('/api/plate', {
-        method: `POST`,
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${sessionStorage.getItem('token')}`
-        },
-        body: JSON.stringify(plates)
+// Update + add plates function
+export const PlateModifier = async (req: NextApiRequest, res: NextApiResponse) => {
+  const {plate, newPlate} = req.body;
+  const {plateID} = req.query;
+  let query = plateID ? (typeof plateID === "string" ? plateID : plateID.join(',')) : undefined;
+  let response;
+  if (plate && !query && !newPlate){
+    response = await fetch(`${localUrl}/api/plate`, {
+      method: `POST`,
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(plate)
     }).then(response => {
-        if (!response.ok) {
-            if (response.status == 400) {
-                return response.text().then((text) => {
-                    throw new Error(text);
-                });
-            }
-            throw new Error();
-        }
-        return response.json();
+      if (!response.ok) {
+        throw new Error();
+      }
+      return response;
+    }).catch((e: Error) => {
+      console.error("Could not add plate. Reason: " + e.message);
     });
+  } else if (!plate && query && newPlate) {
+    response = await fetch(`${localUrl}/api/plate/${query}`, {
+      method: `POST`,
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(plate)
+    }).then(response => {
+      if (!response.ok) {
+        throw new Error();
+      }
+      return response;
+    }).catch((e: Error) => {
+      console.error("Could not update plate. Reason: " + e.message);
+    });
+  }
+  if (response)
+    return res.status(response.status);
+  else
+    return res.status(500);
+}
 
-export const deletePlate = (plateID: string) =>
-    fetch(`/api/plate/${encodeURIComponent(plateID)}`, {
-        method: `DELETE`,
-        headers: {
-            Authorization: `Bearer ${sessionStorage.getItem('token')}`
-        }
+export const PlateRemover = async (req: NextApiRequest, res: NextApiResponse) => {
+  const {plateID} = req.query
+  let query = plateID ? (typeof plateID === "string" ? plateID : plateID.join(',')) : undefined;
+  const response = await fetch(`${localUrl}/api/plate/${query}`, {
+      method: `DELETE`
     }).then(response => {
-        if (!response.ok) {
-            throw new Error();
-        }
-        return response;
-    });
-
-export const modifyPlate = (plateID: string, plate: Plate) =>
-    fetch(`/api/plate/${encodeURIComponent(plateID)}`, {
-        method: `POST`,
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${sessionStorage.getItem('token')}`
-        },
-        body: JSON.stringify(plate)
-    }).then(response => {
-        if (!response.ok) {
-            throw new Error();
-        }
-        return response;
-    });
+      if (!response.ok) {
+        throw new Error();
+      }
+      return response;
+    }).catch((e: Error) => {
+    console.error("Could not fetch image. Reason: " + e.message);
+  });
+  if (response)
+    return res.status(response.status);
+  else
+    return res.status(500);
+}
