@@ -9,14 +9,17 @@ import {
     Spinner
 } from "@chakra-ui/react";
 import {useEffect, useState} from "react";
-import Image from "next/image";
+import { Image } from '@chakra-ui/react'
 import {useInterval} from "@/utils/hooks";
 import {Log} from "@/services/logs.service";
+import {ImageJson} from "@/services/images.service";
+import {BeatLoader} from "react-spinners";
+import {CustomPlaceholder} from "react-placeholder-image";
 
 const Logs = () => {
     const [logs, setLogs] = useState<Log[]>([
       {timestamp: "Date", action: "Action", description: "Desc"}]);
-    const [images, setImages] = useState<string[]>([]);
+    const [images, setImages] = useState<string[]>();
     const [refresh, setRefresh] = useState(false);
 
     useEffect(() => {
@@ -27,16 +30,18 @@ const Logs = () => {
             let imgs = Array<string>(logs.length);
             for (let i = 0; i < logs.length; i++) {
                 if (logs[i].image != undefined) {
-                    promises.push(fetch(`api/image/${logs[i].image}`, {method: 'GET'}).then((res) => res.json()).then((img:string) => {
-                        imgs[i] = img;
+                    promises.push(fetch(`api/image/${logs[i].image}`, {method: 'GET'})
+                      .then((res) => res.json())
+                      .then((img : ImageJson) => {
+                        imgs[i] = img.imagedata;
                     }));
                 }
             }
             Promise.all(promises).then(() => setImages(imgs));
         })
-            .catch(error => {
-                console.log(error.message)
-            })
+        .catch(error => {
+            console.log(error.message)
+        })
     }, []);
 
     // useInterval(() => {
@@ -66,12 +71,21 @@ const Logs = () => {
                           {log.description}
                       </GridItem>
                       <GridItem>
-                          {log.image ?
+                          {(log.image && images) ?
                               <>
                               {images[index] ?
-                                  <Image src={`data:image/jpeg;base64, ${images[index]}`} alt={'Log Image'}/>
+                                <Image src={images[index]} fit={'contain'} alt={'Image of a car\'s license plate'}
+                                       borderRadius={'inherit'} fallback={
+                                    <CustomPlaceholder
+                                      width={500}
+                                      height={500}
+                                      backgroundColor="#dedede"
+                                      textColor="#ffffff"
+                                      text="License plate image"
+                                      style={{borderRadius: 'inherit'}}
+                                    />}/>
                                   :
-                                  <Spinner/>
+                                  <BeatLoader />
                               }
                               </>
                               :
