@@ -43,9 +43,15 @@ const Status = () => {
                   Light
                 </FormLabel>
                 <Switch id='light' isChecked={lightOn} onChange={(e) => {
-                  let lightOn = e.target.value ? 1 : 0;
-                  fetch('api/actors', {method: 'POST', body: JSON.stringify({light: lightOn})}).then((res) => {
-                    console.log(res.status);
+                  console.log(e.target.checked);
+                  let innerLightOn = e.target.checked ? 1 : 0;
+                  fetch('api/actors', {method: 'POST', body: JSON.stringify({
+                      light: innerLightOn,
+                      bar: barOpen ? 1 : 0
+                  })}).then((res) => {
+                    console.log("Light status was changed: " + res.status);
+                    setLightOn(e.target.checked);
+                    setRefresh(!refresh);
                   }).catch((error: Error) => {
                     console.error(error.message);
                   })
@@ -56,9 +62,15 @@ const Status = () => {
                   Bar
                 </FormLabel>
                 <Switch id='bar' isChecked={barOpen} onChange={(e) => {
-                  let barOpen = e.target.value ? 1 : 0;
-                  fetch('api/actors', {method: 'POST', body: JSON.stringify({bar: barOpen})}).then((res) => {
-                    console.log(res.status);
+                  console.log(e.target.checked);
+                  let innerBarOpen = e.target.checked ? 1 : 0;
+                  fetch('api/actors', {method: 'POST', body: JSON.stringify({
+                      bar: innerBarOpen,
+                      light: lightOn ? 1 : 0
+                  })}).then((res) => {
+                    console.log("Bar status was changed: " + res.status);
+                    setBarOpen(e.target.checked);
+                    setRefresh(!refresh);
                   }).catch((error: Error) => {
                     console.error(error.message);
                   })

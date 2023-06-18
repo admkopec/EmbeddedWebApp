@@ -7,40 +7,42 @@ export interface Actuators {
 }
 
 export const ActorsGetter = async (req: NextApiRequest, res: NextApiResponse) => {
-  const response = await fetch(`${localUrl}/api/actors`,{
+  const responseJson = await fetch(`${localUrl}/api/actors`,{
     method: `GET`
   }).then((response) => {
     if (!response.ok) {
       throw new Error();
     }
-    return response;
+    return response.json();
   }).catch((e: Error) => {
     console.error("Could not fetch actors status. Reason: " + e.message);
   });
-  if (response)
-    return res.status(response.status).json(response.json());
+  console.log(responseJson);
+  if (responseJson)
+    return res.status(200).json(responseJson);
   else
     return res.status(500);
 }
 
 export const ActorsSetter = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { actuators } = req.body;
-  const response = await fetch(`${localUrl}/api/actors`,{
+  console.log(req.body);
+  const responseJson = await fetch(`${localUrl}/api/actors`,{
     method: `POST`,
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(actuators)
+    body: req.body
   }).then((response) => {
     if (!response.ok) {
       throw new Error();
     }
-    return response;
+    return response.json();
   }).catch((e: Error) => {
     console.error("Could not fetch actors status. Reason: " + e.message);
   });
-  if (response)
-    return res.status(response.status).json(response.json());
+  console.log(responseJson);
+  if (responseJson)
+    return res.status(200).json(responseJson);
   else
     return res.status(500);
 }
