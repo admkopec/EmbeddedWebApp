@@ -42,7 +42,7 @@ const Logs = () => {
         .catch(error => {
             console.log(error.message)
         })
-    }, []);
+    }, [refresh]);
 
     // useInterval(() => {
     //     setRefresh(!refresh);
