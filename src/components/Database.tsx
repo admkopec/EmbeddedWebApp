@@ -25,6 +25,7 @@ export interface PlateModification {
 export default function Database(){
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [platesData, setPlatesData] = useState<Plate[]>();
+  const [platesDataFiltered, setPlatesDataFiltered] = useState<Plate[]>();
   const [searchQuery, setSearchQuery] = useState<string | undefined>();
   const [ currPlateInfo, setCurrPlateInfo ] = useState<PlateModification>();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -39,6 +40,7 @@ export default function Database(){
       .then((plates: Plate[]) => {
         console.log("Plates were fetched.");
         setPlatesData(plates);
+        setPlatesDataFiltered(plates);
       });
   }, []);
 
@@ -67,20 +69,14 @@ export default function Database(){
   }
 
   useEffect(() => {
-    // handleSearch(searchQuery || '');
+    handleSearch(searchQuery);
   }, [searchQuery])
 
-  const handleSearch = (query: string) => {
-    fetch(`api/plate/${query}`, {method: 'GET'}).then((res) => {
-      if (res.ok)
-        return res.json();
-      return new Error(res.status.toString());
-    }).then((resJson: Plate[]) => {
-      console.log("Plates were fetched by query.");
-      setPlatesData(resJson);
-    }).catch((error: Error) => {
-      console.error(error.message);
-    });
+  const handleSearch = (query: string | undefined) => {
+    if (query && query != '')
+      setPlatesDataFiltered(platesData?.filter((plate) => plate?.plate.includes(query.toUpperCase())));
+    else
+      setPlatesDataFiltered(platesData);
   }
 
   return (
@@ -99,7 +95,7 @@ export default function Database(){
               style={{maxHeight: '300px', width: 'auto'}}
             >
               <Accordion allowToggle={true} width={'100%'}>
-                {platesData ? platesData.map((plate: Plate, index: number) => (
+                {platesDataFiltered ? platesDataFiltered.map((plate: Plate, index: number) => (
                   <PlateInfo plate={plate} openDialog={handleOpenDialog} key={index+1}/>
                 )) : <BeatLoader size={10} color='grey' />}
               </Accordion>
