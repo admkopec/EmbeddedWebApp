@@ -24,20 +24,20 @@ const Logs = () => {
 
     useEffect(() => {
         fetch('api/logs', {method: 'GET'}).then((response) => response.json()).then(
-          (logs: Log[]) => {
+          async (logs: Log[]) => {
             setLogs(logs);
             let promises = [];
             let imgs = Array<string>(logs.length);
             for (let i = 0; i < logs.length; i++) {
                 if (logs[i].image != undefined) {
-                    promises.push(fetch(`api/image/${logs[i].image}`, {method: 'GET'})
-                      .then((res) => res.json())
-                      .then((img : ImageJson) => {
-                        imgs[i] = img.imagedata;
-                    }));
+                    await fetch(`api/image/${logs[i].image}`, {method: 'GET'})
+                        .then((res) => res.json())
+                        .then((img : ImageJson) => {
+                            imgs[i] = img.imagedata;
+                        })
                 }
             }
-            Promise.all(promises).then(() => setImages(imgs));
+              setImages(imgs)
         })
         .catch(error => {
             console.log(error.message)

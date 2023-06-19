@@ -21,7 +21,7 @@ export const ActorsGetter = async (req: NextApiRequest, res: NextApiResponse) =>
   if (responseJson)
     return res.status(200).json(responseJson);
   else
-    return res.status(500);
+    return res.status(500).json({});
 }
 
 export const ActorsSetter = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -44,5 +44,5 @@ export const ActorsSetter = async (req: NextApiRequest, res: NextApiResponse) =>
   if (responseJson)
     return res.status(200).json(responseJson);
   else
-    return res.status(500);
+    return res.status(500).json({});
 }

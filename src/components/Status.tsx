@@ -14,9 +14,7 @@ const Status = () => {
   const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
-    fetch('api/image', {method: 'GET'}).then((res) => {
-      return res.json();
-    }).then((data: ImageJson) => setCurrentImage(data));
+
   }, []);
 
   useEffect(() => {
@@ -25,6 +23,10 @@ const Status = () => {
     }).then((info: Actuators) => {
       setLightOn(info.light === 1);
       setBarOpen(info.bar === 1);
+    }).then(() => {
+      fetch('api/image', {method: 'GET'}).then((res) => {
+        return res.json();
+      }).then((data: ImageJson) => setCurrentImage(data));
     })
   }, [refresh]);
 

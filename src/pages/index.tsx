@@ -25,12 +25,10 @@ const IndexPage = () => {
   }, []);
 
   const handleChangeTab = (index: number) => {
-    if (index === 0)
-      sessionStorage.setItem("tab", "status");
     if (index === 1)
-      sessionStorage.setItem("tab", "database");
+      window.location="/plates";
     if (index === 2)
-      sessionStorage.setItem("tab", "logs");
+      window.location="/logs";
     setActiveTabI(index);
   }
 
@@ -39,7 +37,7 @@ const IndexPage = () => {
       <RootLayout>
         <Card size={"lg"} m={4} maxW={"2xl"} width={"2xl"}>
           <CardBody>
-            <Tabs align={"center"} size={"lg"} variant='enclosed' index={activeTabI}
+            <Tabs align={"center"} size={"lg"} variant='enclosed' index={0}
                   onChange={(index) => handleChangeTab(index)} isFitted>
               <TabList>
                 <Tab>Status</Tab>
@@ -51,10 +49,10 @@ const IndexPage = () => {
                   <Status />
                 </TabPanel>
                 <TabPanel>
-                  <Database />
+                  <></>
                 </TabPanel>
                 <TabPanel>
-                  <Logs/>
+                  <></>
                 </TabPanel>
               </TabPanels>
             </Tabs>

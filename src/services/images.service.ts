@@ -14,6 +14,7 @@ export const ImageGetter = async (req: NextApiRequest, res: NextApiResponse) => 
     responseJson = await fetch(`${localUrl}/api/image/${query}`, {
       method: `GET`
     }).then((response) => {
+    console.log("Fetch log image. ID: " + query + " Status: " + response.status);
     if (!response.ok) {
       throw new Error();
     }
@@ -35,5 +36,5 @@ export const ImageGetter = async (req: NextApiRequest, res: NextApiResponse) => 
   if (responseJson)
     return res.status(200).json(responseJson);
   else
-    return res.status(500);
+    return res.status(500).json({});
 }

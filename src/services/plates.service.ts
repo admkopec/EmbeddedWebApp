@@ -26,6 +26,7 @@ export const PlateGetter = async (req: NextApiRequest, res: NextApiResponse) => 
     responseJson = await fetch(`${localUrl}/api/plate`, {
       method: `GET`
     }).then(response => {
+      console.error("Fetch plates. Status: " + response.status);
       if (!response.ok) {
         throw new Error();
       }
@@ -37,7 +38,7 @@ export const PlateGetter = async (req: NextApiRequest, res: NextApiResponse) => 
   if (responseJson)
     return res.status(200).json(responseJson);
   else
-    return res.status(500);
+    return res.status(500).json([]);
 }
 
 // Update + add plates function
@@ -81,7 +82,7 @@ export const PlateModifier = async (req: NextApiRequest, res: NextApiResponse) =
   if (responseJson)
     return res.status(200).json(responseJson);
   else
-    return res.status(500);
+    return res.status(500).json([]);
 }
 
 export const PlateRemover = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -98,7 +99,7 @@ export const PlateRemover = async (req: NextApiRequest, res: NextApiResponse) =>
     console.error("Could not delete plate. Reason: " + e.message);
   });
   if (response)
-    return res.status(response.status);
+    return res.status(response.status).json({});
   else
-    return res.status(500);
+    return res.status(500).json({});
 }
