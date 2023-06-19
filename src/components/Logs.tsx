@@ -8,7 +8,7 @@ import {
     AccordionIcon,
     Spinner
 } from "@chakra-ui/react";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import { Image } from '@chakra-ui/react'
 import {useInterval} from "@/utils/hooks";
 import {Log} from "@/services/logs.service";
@@ -17,7 +17,7 @@ import {BeatLoader} from "react-spinners";
 import {CustomPlaceholder} from "react-placeholder-image";
 
 const Logs = () => {
-    const [logs, setLogs] = useState<Log[]>([]);
+    const [logs, setLogs] = useState<Log[]>();
     const [images, setImages] = useState<string[]>();
     const [refresh, setRefresh] = useState(false);
 
@@ -49,7 +49,7 @@ const Logs = () => {
 
     return (
   <Accordion allowToggle>
-      {logs.map( (log, index) =>
+      {logs ? logs.map( (log, index) =>
           <AccordionItem key={index+1}>
               <h2>
                   <AccordionButton>
@@ -93,7 +93,7 @@ const Logs = () => {
                   </Grid>
               </AccordionPanel>
           </AccordionItem>
-      )}
+      ) : <BeatLoader size={10} color='grey' />}
   </Accordion>
 )};
 
