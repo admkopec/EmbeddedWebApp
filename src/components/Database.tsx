@@ -15,6 +15,7 @@ import React, {useEffect, useState} from "react";
 import {OverlayScrollbarsComponent} from "overlayscrollbars-react";
 import {Plate} from "@/services/plates.service";
 import ModifyPlateDialog, {Action} from "@/components/ModifyPlateDialog";
+import * as querystring from "querystring";
 
 export interface PlateModification {
   action?: Action;
@@ -23,20 +24,8 @@ export interface PlateModification {
 
 export default function Database(){
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [platesData, setPlatesData] = useState<Plate[]>(
-    // [{plate: "LPU42534", expireDate: "03.04.2026"},
-    // {plate: "LPU42534", expireDate: "03.04.2026"},
-    // {plate: "LPU42534", expireDate: "03.04.2026"},
-    // {plate: "LPU42534", expireDate: "03.04.2026"},
-    // {plate: "LPU42534", expireDate: "03.04.2026"},
-    // {plate: "LPU42534", expireDate: "03.04.2026"},
-    // {plate: "LPU42534", expireDate: "03.04.2026"},
-    // {plate: "LPU42534", expireDate: "03.04.2026"},
-    // {plate: "LPU42534", expireDate: "03.04.2026"},
-    // {plate: "LPU42534", expireDate: "03.04.2026"},
-    // {plate: "LPU42534", expireDate: "03.04.2026"},
-    // {plate: "KU791XR", expireDate: "03.04.2026"}]
-  );
+  const [platesData, setPlatesData] = useState<Plate[]>();
+  const [searchQuery, setSearchQuery] = useState<string | undefined>();
   const [ currPlateInfo, setCurrPlateInfo ] = useState<PlateModification>();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -48,8 +37,9 @@ export default function Database(){
         return new Error(res.status.toString());
       })
       .then((plates: Plate[]) => {
-          setPlatesData(plates);
-        });
+        console.log("Plates were fetched.");
+        setPlatesData(plates);
+      });
   }, []);
 
   const handleOpenDialog = (action: Action, plate: Plate) => {
@@ -58,6 +48,39 @@ export default function Database(){
       plate: plate
     });
     onOpen();
+  }
+
+  const handleAddPlate = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setIsLoading(true);
+    const plate: Plate = Object.fromEntries(
+      new FormData(event.currentTarget).entries()
+    ) as unknown as Plate;
+    console.log(plate);
+    fetch('api/plate', {method: 'POST', body: JSON.stringify({plate: plate})}).then((res) => {
+      console.log("Plate was added: " + res.status);
+    }).catch((error: Error) => {
+      console.error(error.message);
+    });
+    setIsLoading(false);
+    location.reload();
+  }
+
+  useEffect(() => {
+    // handleSearch(searchQuery || '');
+  }, [searchQuery])
+
+  const handleSearch = (query: string) => {
+    fetch(`api/plate/${query}`, {method: 'GET'}).then((res) => {
+      if (res.ok)
+        return res.json();
+      return new Error(res.status.toString());
+    }).then((resJson: Plate[]) => {
+      console.log("Plates were fetched by query.");
+      setPlatesData(resJson);
+    }).catch((error: Error) => {
+      console.error(error.message);
+    });
   }
 
   return (
@@ -89,7 +112,8 @@ export default function Database(){
         <Container borderWidth='1px' borderRadius='lg' p={2}>
           <Flex direction={"column"} wrap={"nowrap"} alignItems={"center"} justifyContent={"center"}>
             <Text m={1}>Search for a license plate</Text>
-            <Input m={1} placeholder='Search' variant={"filled"}/>
+            <Input m={1} placeholder='Search' variant={"filled"} onChange={(e) => setSearchQuery(e.target.value)}
+                   value={searchQuery}/>
           </Flex>
         </Container>
       </GridItem>
@@ -97,17 +121,20 @@ export default function Database(){
         <Container borderWidth='1px' borderRadius='lg' p={2}>
           <Flex direction={"column"} wrap={"nowrap"} alignItems={"center"} justifyContent={"center"}>
             <Text m={1}>Add new license plate</Text>
-            <Input m={1} placeholder='Enter new plate number' type="text" variant={"filled"}/>
-            <Input m={1} placeholder="Set expiry date" type="datetime-local" variant={"filled"}/>
-            <Button
-              m={1}
-              isLoading={isLoading}
-              colorScheme='blue'
-              spinner={<BeatLoader size={6} color='white' />}
-              alignSelf={"end"}
-            >
-              Add
-            </Button>
+            <form id={"modify-plate-form"} onSubmit={handleAddPlate}>
+              <Input m={1} id={"plate-number"} name={"plate"} placeholder='Enter new plate number' type="text" variant={"filled"}/>
+              <Input m={1} id={"expire-date"} name={"expireDate"} placeholder="Set expiry date" type="datetime-local" variant={"filled"}/>
+              <Button
+                m={1}
+                isLoading={isLoading}
+                colorScheme='blue'
+                type={"submit"}
+                spinner={<BeatLoader size={6} color='white' />}
+                alignSelf={"end"}
+              >
+                Add
+              </Button>
+            </form>
           </Flex>
         </Container>
       </GridItem>

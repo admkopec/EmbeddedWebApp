@@ -70,7 +70,7 @@ const Logs = () => {
                       <GridItem>
                           {log.description}
                       </GridItem>
-                      <GridItem>
+                      <GridItem borderRadius='lg'>
                           {(log.image && images) ?
                               <>
                               {images[index] ?

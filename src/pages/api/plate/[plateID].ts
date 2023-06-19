@@ -5,6 +5,7 @@ import {PlateGetter, PlateModifier, PlateRemover} from "@/services/plates.servic
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   await RouteHandler(req, res, {
     GET: PlateGetter,
-    POST: PlateModifier
+    POST: PlateModifier,
+    DELETE: PlateRemover
   });
 }

@@ -7,7 +7,9 @@ import {Actuators} from "@/services/actuators.service";
 
 const Status = () => {
   const [lightOn, setLightOn] = useState(false);
+  const [lightDisabled, setLightDisabled] = useState(false);
   const [barOpen, setBarOpen] = useState(false);
+  const [barDisabled, setBarDisabled] = useState(false);
   const [currentImage, setCurrentImage] = useState<ImageJson>();
   const [refresh, setRefresh] = useState(false);
 
@@ -42,8 +44,9 @@ const Status = () => {
                 <FormLabel htmlFor='light' mb='0'>
                   Light
                 </FormLabel>
-                <Switch id='light' isChecked={lightOn} onChange={(e) => {
+                <Switch id='light' isDisabled={lightDisabled} isChecked={lightOn} onChange={(e) => {
                   console.log(e.target.checked);
+                  setLightDisabled(true);
                   let innerLightOn = e.target.checked ? 1 : 0;
                   fetch('api/actors', {method: 'POST', body: JSON.stringify({
                       light: innerLightOn,
@@ -55,14 +58,16 @@ const Status = () => {
                   }).catch((error: Error) => {
                     console.error(error.message);
                   })
+                  setLightDisabled(false);
                 }}/>
               </FormControl>
               <FormControl display='flex' justifyContent={"center"}>
                 <FormLabel htmlFor='bar' mb='0'>
                   Bar
                 </FormLabel>
-                <Switch id='bar' isChecked={barOpen} onChange={(e) => {
+                <Switch id='bar' isDisabled={barDisabled} isChecked={barOpen} onChange={(e) => {
                   console.log(e.target.checked);
+                  setBarDisabled(true);
                   let innerBarOpen = e.target.checked ? 1 : 0;
                   fetch('api/actors', {method: 'POST', body: JSON.stringify({
                       bar: innerBarOpen,
@@ -73,7 +78,8 @@ const Status = () => {
                     setRefresh(!refresh);
                   }).catch((error: Error) => {
                     console.error(error.message);
-                  })
+                  });
+                  setBarDisabled(false);
                 }}/>
               </FormControl>
             </Stack>
@@ -84,6 +90,7 @@ const Status = () => {
         </GridItem>
         <GridItem area={'image'}>
           <Container borderWidth='1px' borderRadius='lg' p={2}>
+            <Text>Current image</Text>
             <Image src={currentImage?.imagedata} fit={'contain'} alt={'Image of a car\'s license plate'}
                    borderRadius={'inherit'} fallback={
               <CustomPlaceholder
