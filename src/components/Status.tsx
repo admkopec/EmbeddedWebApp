@@ -53,10 +53,10 @@ const Status = () => {
                   fetch('api/actors', {method: 'POST', body: JSON.stringify({
                       light: innerLightOn,
                       bar: barOpen ? 1 : 0
-                  })}).then((res) => {
-                    console.log("Light status was changed: " + res.status);
-                    setLightOn(e.target.checked);
-                    setRefresh(!refresh);
+                  })}).then((res) => res.json()).then((json: Actuators) => {
+                    console.log("Light status was changed: " + json);
+                    setBarOpen(json.bar === 1);
+                    setLightOn(json.light === 1);
                   }).catch((error: Error) => {
                     console.error(error.message);
                   })
@@ -74,10 +74,12 @@ const Status = () => {
                   fetch('api/actors', {method: 'POST', body: JSON.stringify({
                       bar: innerBarOpen,
                       light: lightOn ? 1 : 0
-                  })}).then((res) => {
-                    console.log("Bar status was changed: " + res.status);
-                    setBarOpen(e.target.checked);
-                    setRefresh(!refresh);
+                  })}).then((res) =>
+                    res.json()
+                  ).then((json: Actuators) => {
+                    console.log("Bar status was changed: " + json);
+                    setBarOpen(json.bar === 1);
+                    setLightOn(json.light === 1);
                   }).catch((error: Error) => {
                     console.error(error.message);
                   });

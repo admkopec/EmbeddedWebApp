@@ -38,7 +38,7 @@ export const ActorsSetter = async (req: NextApiRequest, res: NextApiResponse) =>
     }
     return response.json();
   }).catch((e: Error) => {
-    console.error("Could not fetch actors status. Reason: " + e.message);
+    console.error("Could not post actors status. Reason: " + e.message);
   });
   console.log(responseJson);
   if (responseJson)
