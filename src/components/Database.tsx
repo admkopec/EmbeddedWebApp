@@ -121,7 +121,7 @@ export default function Database(){
         <Container borderWidth='1px' borderRadius='lg' p={2}>
           <Flex direction={"column"} wrap={"nowrap"} alignItems={"center"} justifyContent={"center"}>
             <Text m={1}>Add new license plate</Text>
-            <form id={"modify-plate-form"} onSubmit={handleAddPlate}>
+            <form id={"add-plate-form"} onSubmit={handleAddPlate}>
               <Input m={1} id={"plate-number"} name={"plate"} placeholder='Enter new plate number' type="text" variant={"filled"}/>
               <Input m={1} id={"expire-date"} name={"expireDate"} placeholder="Set expiry date" type="datetime-local" variant={"filled"}/>
               <Button

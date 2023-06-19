@@ -43,7 +43,7 @@ const actions : DialogAction[] = [
   {
     title: "Delete license plate",
     description: "This license plate data will be permanently deleted from the database and become unauthorised. Do you" +
-      " want to proceed?.",
+      " want to proceed?",
     callback: async (plateID, closeDialog) => {
       await fetch(`/api/plate/${plateID}`, {method: 'DELETE'}).then(response => {
         if (!response.ok) {
@@ -71,12 +71,18 @@ export default function ModifyPlateDialog(props: ModifyPlateDialogProps & PlateM
 
   const handleModifyPlate = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const plate: Plate = Object.fromEntries(
+    let newPlate: Plate = Object.fromEntries(
       new FormData(event.currentTarget).entries()
     ) as unknown as Plate;
     // TODO: fix date format
-    if (action)
-      actions[action - 1].callback(plate.plate, onClose, plate);
+    newPlate.expireDate = newPlate.expireDate?.length === 16 ? newPlate.expireDate.concat(':00.') : newPlate.expireDate;
+    newPlate.expireDate = newPlate.expireDate?.length === 19 ? newPlate.expireDate.concat('.') : newPlate.expireDate;
+    newPlate.expireDate = newPlate.expireDate?.padEnd(26, '0');
+    console.log("New plate no: " + newPlate.expireDate);
+    if (action && plate?.plate)
+      actions[action - 1].callback(plate?.plate, onClose, newPlate);
+    onClose();
+    location.reload();
   }
 
   return (
@@ -97,7 +103,7 @@ export default function ModifyPlateDialog(props: ModifyPlateDialogProps & PlateM
           <Text>
             {action && actions[action-1].description}
           </Text>
-          {action == Action.UpdateLP ? <form id={"modify-plate-form"} name={"modify-plate-form"} onSubmit={handleModifyPlate}>
+          {action === Action.UpdateLP ? <form id={"modify-plate-form"} name={"modify-plate-form"} onSubmit={handleModifyPlate}>
             <Input defaultValue={plate?.plate} m={1} id={"plate-number"} name={"plate"} placeholder='Plate number' type={'text'}/>
             <Input defaultValue={plate?.expireDate && plate?.expireDate?.length > 19 ?
               plate?.expireDate?.substring(0, plate?.expireDate?.length-3) :
@@ -110,12 +116,14 @@ export default function ModifyPlateDialog(props: ModifyPlateDialogProps & PlateM
           <Button colorScheme='red' ref={cancelRef} onClick={onClose}>
             Cancel
           </Button>
-          <Button ml={3} onClick={(e) => {
-            if (action && plate && action != Action.UpdateLP) {
+          <Button ml={3} onClick={() => {
+            if (action === Action.UpdateLP)
+              return;
+            if (plate && action) {
               actions[action - 1].callback(plate.plate, onClose, newPlate);
+              onClose();
+              location.reload();
             }
-            onClose();
-            location.reload();
           }} type={"submit"} form={"modify-plate-form"}>
             {action ? actions[action-1].buttonText : "Confirm"}
           </Button>
