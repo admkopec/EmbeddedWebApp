@@ -17,8 +17,7 @@ import {BeatLoader} from "react-spinners";
 import {CustomPlaceholder} from "react-placeholder-image";
 
 const Logs = () => {
-    const [logs, setLogs] = useState<Log[]>([
-      {timestamp: "Date", action: "Action", description: "Desc"}]);
+    const [logs, setLogs] = useState<Log[]>([]);
     const [images, setImages] = useState<string[]>();
     const [refresh, setRefresh] = useState(false);
 

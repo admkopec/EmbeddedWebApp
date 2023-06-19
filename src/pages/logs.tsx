@@ -7,29 +7,20 @@ import Database from "@/components/Database";
 import 'overlayscrollbars/overlayscrollbars.css';
 import {accordionTheme} from "@/style/PlateAccordion";
 import {useEffect, useState} from "react";
+import {useRouter} from "next/router";
 
 export const theme = extendTheme({
     components: { Accordion: accordionTheme },
 })
 
-const IndexPage = () => {
-    const [activeTabI, setActiveTabI] = useState(0);
-
-    useEffect(() => {
-        if (sessionStorage.getItem("tab") === "status")
-            setActiveTabI(0);
-        if (sessionStorage.getItem("tab") === "database")
-            setActiveTabI(1);
-        if (sessionStorage.getItem("tab") === "logs")
-            setActiveTabI(2);
-    }, []);
+const LogsPage = () => {
+    const router = useRouter();
 
     const handleChangeTab = (index: number) => {
         if (index === 0)
-            window.location="/";
+            router.push("/");
         if (index === 1)
-            window.location="/plates";
-        setActiveTabI(index);
+            router.push("/plates");
     }
 
     return (
@@ -63,4 +54,4 @@ const IndexPage = () => {
     );
 }
 
-export default IndexPage;
+export default LogsPage;
